@@ -10,6 +10,9 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/moudle1" />
+            <option value="$PROJECT_DIR$/primrouter-annotation" />
+            <option value="$PROJECT_DIR$/primrouter-compiler" />
+            <option value="$PROJECT_DIR$/primrouter-core" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

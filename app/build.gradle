@@ -15,6 +15,12 @@ android {
         versionCode config.versionCode
         versionName config.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName()]
+            }
+        }
     }
     buildTypes {
         release {
@@ -35,4 +41,10 @@ dependencies {
     if (!isComponent){
         implementation project(':moudle1')
     }
+
+    annotationProcessor project(':primrouter-compiler')
+
+    implementation project(':primrouter-annotation')
+
+    implementation project(':primrouter-core')
 }

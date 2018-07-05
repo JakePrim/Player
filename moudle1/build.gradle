@@ -22,20 +22,26 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
 
+        //
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName()]
+            }
+        }
         //配置组件的app ID
         if (isComponent) {
             applicationId appIdConfig.app
         }
 
         //配置BuildConfig 代码中可以调用判断
-        buildConfigField("boolean","isComponent",String.valueOf(isComponent))
+        buildConfigField("boolean", "isComponent", String.valueOf(isComponent))
 
         //配置资源文件
         sourceSets {
             main {
                 if (isComponent) {
                     manifest.srcFile 'src/main/moudle/AndroidManifest.xml'
-                    java.srcDirs 'src/main/java','src/main/moudle/java'
+                    java.srcDirs 'src/main/java', 'src/main/moudle/java'
                 } else {
                     manifest.srcFile 'src/main/AndroidManifest.xml'
                 }

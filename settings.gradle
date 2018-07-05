@@ -1,1 +1,1 @@
-include ':app', ':moudle1'
+include ':app', ':moudle1', ':primrouter-compiler', ':primrouter-core', ':primrouter-annotation'
