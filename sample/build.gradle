@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 def config = rootProject.ext.androidConfig
 
@@ -9,7 +9,7 @@ def dependenciesConfig = rootProject.ext.dependencies
 android {
     compileSdkVersion config.compileSdkVersion
     defaultConfig {
-        applicationId appIdConfig.app
+//        applicationId appIdConfig.app
         minSdkVersion config.minSdkVersion
         targetSdkVersion config.targetSdkVersion
         versionCode config.versionCode

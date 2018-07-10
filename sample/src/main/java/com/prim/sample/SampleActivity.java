@@ -5,8 +5,8 @@ import android.os.Bundle;
 
 import com.prim.router.primrouter_annotation.Router;
 
-@Router(path = "/module/sample")
-public class MainActivity extends AppCompatActivity {
+@Router(path = "/sample/test")
+public class SampleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
