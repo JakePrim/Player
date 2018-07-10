@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/primrouter-annotation" />
             <option value="$PROJECT_DIR$/primrouter-compiler" />
             <option value="$PROJECT_DIR$/primrouter-core" />
+            <option value="$PROJECT_DIR$/sample" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

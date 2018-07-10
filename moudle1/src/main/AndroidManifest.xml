@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="demo.prim.com.moudle1">
 
-    <application>
-        <activity android:name=".MainActivity"></activity>
+    <application android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".Main2Activity"></activity>
     </application>
 
 </manifest>

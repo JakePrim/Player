@@ -1,13 +1,11 @@
-package demo.prim.com.moudle1;
+package com.prim.sample;
 
-import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import com.prim.router.primrouter_annotation.Router;
 
-@Router(path = "/module/test")
+@Router(path = "/module/sample")
 public class MainActivity extends AppCompatActivity {
 
     @Override

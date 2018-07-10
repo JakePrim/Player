@@ -12,9 +12,9 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.squareup.javapoet.WildcardTypeName;
 
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +34,6 @@ import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -42,6 +41,7 @@ import javax.lang.model.util.Types;
 
 
 import static javax.lang.model.SourceVersion.RELEASE_7;
+import static javax.lang.model.element.Modifier.PUBLIC;
 
 //AnnotationProcessor register
 @AutoService(Processor.class)
@@ -170,7 +170,7 @@ public class RouterProcessor extends AbstractProcessor {
      * @param annotatedWith
      */
     private void processRouter(Set<? extends Element> annotatedWith) {
-        RouterMeta routerMeta;
+        RouterMeta routerMeta = null;
         //获得Activity类的节点信息
         TypeElement activity = elementUtils.getTypeElement(Consts.Activity);
         //单个的节点
@@ -183,6 +183,8 @@ public class RouterProcessor extends AbstractProcessor {
             if (typeUtils.isSubtype(typeMirror, activity.asType())) {
                 //存储路由相关的信息
                 routerMeta = new RouterMeta(RouterMeta.Type.ACTIVITY, annotation, element);
+            } else if (typeUtils.isSubtype(typeMirror, activity.asType())) {
+
             } else {
                 throw new RuntimeException("Just Support Activity Router!");
             }
@@ -200,14 +202,54 @@ public class RouterProcessor extends AbstractProcessor {
         generatedGroupTable(routeGroupElement);
 
         //生成 $$Root$$ 记录路由表
-        generatedRootTable(routeRootElement);
+        generatedRootTable(routeRootElement, routeGroupElement);
     }
 
     /**
      * 生成路由表class 类
+     *
      * @param routeRootElement
      */
-    private void generatedRootTable(TypeElement routeRootElement) {
+    private void generatedRootTable(TypeElement routeRootElement, TypeElement routeGroupElement) {
+        ////类型 Map<String,Class<? extends IRouteGroup>> routes>
+        ParameterizedTypeName atlas = ParameterizedTypeName.get(ClassName.get(Map.class),
+                ClassName.get(String.class),
+                ParameterizedTypeName.get(
+                        ClassName.get(Class.class),
+                        WildcardTypeName.subtypeOf(ClassName.get(routeGroupElement))));
+
+        //创建参数  Map<String,Class<? extends IRouteGroup>>> routes
+        ParameterSpec altlas = ParameterSpec
+                .builder(atlas, Consts.ROOT_PARAM_NAME)//参数名
+                .build();//创建参数
+
+        //public void loadInfo(Map<String,Class<? extends IRouteGroup>> routes> routes)
+        //函数 public void loadInfo(Map<String,Class<? extends IRouteGroup>> routes> routes)
+        MethodSpec.Builder loadIntoMethodOfRootBuilder = MethodSpec.methodBuilder
+                (Consts.ROOT_METHOD_NAME)
+                .addAnnotation(Override.class)
+                .addModifiers(PUBLIC)
+                .addParameter(altlas);
+
+        //函数体
+        for (Map.Entry<String, String> entry : rootMap.entrySet()) {
+            loadIntoMethodOfRootBuilder.addStatement(Consts.ROOT_PARAM_NAME + ".put($S, $T.class)", entry
+                    .getKey(), ClassName.get(Consts.PAGENAME, entry.getValue
+                    ()));
+        }
+        //生成 $Root$类
+        String rootClassName = Consts.ROOT_CLASS_NAME + moduleName;
+        try {
+            JavaFile.builder(Consts.PAGENAME,
+                    TypeSpec.classBuilder(rootClassName)
+                            .addSuperinterface(ClassName.get(routeRootElement))
+                            .addModifiers(PUBLIC)
+                            .addMethod(loadIntoMethodOfRootBuilder.build())
+                            .build()
+            ).build().writeTo(filer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -224,13 +266,13 @@ public class RouterProcessor extends AbstractProcessor {
 
         //创建参数 Map<String,RouterMeta> atlas
         ParameterSpec altlas = ParameterSpec
-                .builder(atlas, "atlas")//参数名
+                .builder(atlas, Consts.GROUP_PARAM_NAME)//参数名
                 .build();//创建参数
 
         //遍历分组 每一个分组 创建一个 $$Group$$类
         for (Map.Entry<String, List<RouterMeta>> entry : groupMap.entrySet()) {
-            MethodSpec.Builder builder = MethodSpec.methodBuilder("loadInto")//函数名
-                    .addModifiers(Modifier.PUBLIC)//作用域
+            MethodSpec.Builder builder = MethodSpec.methodBuilder(Consts.GROUP_METHOD_NAME)//函数名
+                    .addModifiers(PUBLIC)//作用域
                     .addAnnotation(Override.class)//添加一个注解
                     .addParameter(altlas);//添加参数
 
@@ -242,7 +284,7 @@ public class RouterProcessor extends AbstractProcessor {
                 //$S = String
                 //$T = class
                 //添加函数体
-                builder.addStatement("atlas.put($S,$T.build($T.$L,$T.class,$S,$S))",
+                builder.addStatement(Consts.GROUP_PARAM_NAME+".put($S,$T.build($T.$L,$T.class,$S,$S))",
                         meta.getPath(),
                         ClassName.get(RouterMeta.class),
                         ClassName.get(RouterMeta.Type.class),
@@ -254,22 +296,26 @@ public class RouterProcessor extends AbstractProcessor {
 
             MethodSpec loadInto = builder.build();//函数创建完成loadInto();
 
-            TypeSpec typeSpec = TypeSpec.classBuilder("PrimRouter$$Group$$" + entry.getKey())//类名
+            String groupClassName = Consts.GROUP_CLASS_NAME + entry.getKey();
+
+            TypeSpec typeSpec = TypeSpec.classBuilder(groupClassName)//类名
                     .addSuperinterface(ClassName.get(routeGroupElement))//实现接口IRouteGroup
-                    .addModifiers(Modifier.PUBLIC)//作用域
+                    .addModifiers(PUBLIC)//作用域
                     .addMethod(loadInto)//添加方法
                     .build();//类创建完成
 
             //生成Java文件
             JavaFile javaFile = JavaFile
-                    .builder("com.prim.router.generated", typeSpec)//包名和类
+                    .builder(Consts.PAGENAME, typeSpec)//包名和类
                     .build();
             try {
                 javaFile.writeTo(filer);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            rootMap.put(entry.getKey(), groupClassName);
         }
+
     }
 
     /**

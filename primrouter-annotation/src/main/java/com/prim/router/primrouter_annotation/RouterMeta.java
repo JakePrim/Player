@@ -8,14 +8,14 @@ import javax.lang.model.element.Element;
 public class RouterMeta {
 
     /**
-     * 路由的类型
+     * 路由的类型枚举
      */
     public enum Type {
         ACTIVITY, INSTANCE
     }
 
     /**
-     *
+     * 路由的类型
      */
     private Type type;
 
