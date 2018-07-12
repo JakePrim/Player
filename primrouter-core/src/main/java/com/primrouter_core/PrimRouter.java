@@ -124,13 +124,17 @@ public class PrimRouter {
     }
 
 
-    public Object navigation(final Context context, final JumpCard jumpCard, final int requestCode, Object o1) {
+    public Object navigation(Context context, final JumpCard jumpCard, final int requestCode, Object o1) {
         if (context == null) {
             return null;
         }
         produceJumpCard(jumpCard);
         switch (jumpCard.getType()) {
             case ACTIVITY:
+                Log.e(TAG, "navigation: " + jumpCard.getDestination());
+                if (context == null) {
+                    context = this.application;
+                }
                 final Intent intent = new Intent(context, jumpCard.getDestination());
                 intent.putExtras(jumpCard.getExtras());
                 if (jumpCard.getFlags() != -1) {
@@ -138,29 +142,27 @@ public class PrimRouter {
                 } else if (!(context instanceof Activity)) {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 }
+                final Context finalContext = context;
                 mHandler.post(new Runnable() {//在主线程中跳转
                     @Override
                     public void run() {
                         //可能需要返回码
                         if (requestCode > 0) {
-                            ActivityCompat.startActivityForResult((Activity) context, intent,
+                            ActivityCompat.startActivityForResult((Activity) finalContext, intent,
                                     requestCode, jumpCard.getOptionsBundle());
                         } else {
-                            ActivityCompat.startActivity(context, intent, jumpCard
+                            Log.e(TAG, "run: " + jumpCard.getDestination());
+                            ActivityCompat.startActivity(finalContext, intent, jumpCard
                                     .getOptionsBundle());
                         }
 
                         if ((0 != jumpCard.getEnterAnim() || 0 != jumpCard.getExitAnim()) &&
-                                context instanceof Activity) {
+                                finalContext instanceof Activity) {
                             //老版本
-                            ((Activity) context).overridePendingTransition(jumpCard
+                            ((Activity) finalContext).overridePendingTransition(jumpCard
                                             .getEnterAnim()
                                     , jumpCard.getExitAnim());
                         }
-                        //跳转完成
-//                        if (null != callback) {
-//                            callback.onArrival(postcard);
-//                        }
                     }
                 });
                 break;

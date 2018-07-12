@@ -19,7 +19,7 @@ public class Main2Activity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PrimRouter.getInstance().jump("/sample/test").navigation(Main2Activity.this);
+                PrimRouter.getInstance().jump("/main/test/2").navigation(Main2Activity.this);
             }
         });
     }
