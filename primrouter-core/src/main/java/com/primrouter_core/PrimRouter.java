@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,6 +31,7 @@ import java.util.Set;
 public class PrimRouter {
 
     private static PrimRouter primRouter;
+
     public static final String PAGENAME = "com.prim.router.generated";
 
     public static final String GROUP_CLASS_NAME = "PrimRouter$$Group$$";
@@ -54,7 +56,7 @@ public class PrimRouter {
     }
 
     public PrimRouter() {
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
     }
 
     /**
@@ -90,13 +92,13 @@ public class PrimRouter {
                     routeRoot.loadInto(Depository.rootMap);
                 }
             }
-
-            Log.e(TAG, "路由表分组信息 「");
-            for (Map.Entry<String, Class<? extends IRouteGroup>> entry : Depository.rootMap.entrySet()) {
-                Log.e(TAG, "【key --> " + entry.getKey() + ": value --> " + entry.getValue() + "]");
-            }
-            Log.e(TAG, " 」");
         }
+
+        Log.e(TAG, "路由表分组信息 「");
+        for (Map.Entry<String, Class<? extends IRouteGroup>> entry : Depository.rootMap.entrySet()) {
+            Log.e(TAG, "【key --> " + entry.getKey() + ": value --> " + entry.getValue() + "]");
+        }
+        Log.e(TAG, " 」");
     }
 
     public JumpCard jump(String path) {
@@ -124,6 +126,15 @@ public class PrimRouter {
     }
 
 
+    /**
+     * 开始跳转
+     *
+     * @param context
+     * @param jumpCard
+     * @param requestCode
+     * @param o1
+     * @return
+     */
     public Object navigation(Context context, final JumpCard jumpCard, final int requestCode, Object o1) {
         if (context == null) {
             return null;
@@ -156,12 +167,10 @@ public class PrimRouter {
                                     .getOptionsBundle());
                         }
 
-                        if ((0 != jumpCard.getEnterAnim() || 0 != jumpCard.getExitAnim()) &&
-                                finalContext instanceof Activity) {
+                        if ((0 != jumpCard.getEnterAnim() || 0 != jumpCard.getExitAnim()) && finalContext instanceof Activity) {
                             //老版本
                             ((Activity) finalContext).overridePendingTransition(jumpCard
-                                            .getEnterAnim()
-                                    , jumpCard.getExitAnim());
+                                    .getEnterAnim(), jumpCard.getExitAnim());
                         }
                     }
                 });
@@ -206,12 +215,12 @@ public class PrimRouter {
      */
     private String getGroupName(String path) {
         if (!path.startsWith("/")) {
-            throw new RuntimeException(path + ": 不能有效的提取group");
+            throw new RuntimeException(path + ": 不能有效的提取group，地址必须设置/XX/XX,请查看地址是否设置正确");
         }
         try {
             String group = path.substring(1, path.indexOf("/", 1));
             if (TextUtils.isEmpty(group)) {
-                throw new RuntimeException("不能有效的提取group");
+                throw new RuntimeException(path + ": 不能有效的提取group,地址必须设置/XX/XX,请查看地址是否设置正确");
             }
             return group;
         } catch (Exception e) {

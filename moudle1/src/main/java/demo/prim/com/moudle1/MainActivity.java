@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.prim.router.primrouter_annotation.Router;
 
-@Router(path = "/module/test")
+@Router(path = "/module1/main")
 public class MainActivity extends AppCompatActivity {
 
     @Override
