@@ -171,8 +171,12 @@ public class RouterProcessor extends AbstractProcessor {
      */
     private void processRouter(Set<? extends Element> annotatedWith) {
         RouterMeta routerMeta = null;
-        //获得Activity类的节点信息
+        //获得Activity的类型
         TypeElement activity = elementUtils.getTypeElement(Consts.Activity);
+
+        //获取Service的类型
+        TypeElement service = elementUtils.getTypeElement(Consts.Service);
+
         //单个的节点
         for (Element element : annotatedWith) {
             // 获取类信息 如Activity类
@@ -183,8 +187,9 @@ public class RouterProcessor extends AbstractProcessor {
             if (typeUtils.isSubtype(typeMirror, activity.asType())) {
                 //存储路由相关的信息
                 routerMeta = new RouterMeta(RouterMeta.Type.ACTIVITY, annotation, element);
-            } else if (typeUtils.isSubtype(typeMirror, activity.asType())) {
-
+            } else if (typeUtils.isSubtype(typeMirror, service.asType())) {
+                //存储路由相关的信息
+                routerMeta = new RouterMeta(RouterMeta.Type.SERVICE, annotation, element);
             } else {
                 throw new RuntimeException("Just Support Activity Router!");
             }
@@ -284,7 +289,7 @@ public class RouterProcessor extends AbstractProcessor {
                 //$S = String
                 //$T = class
                 //添加函数体
-                builder.addStatement(Consts.GROUP_PARAM_NAME+".put($S,$T.build($T.$L,$T.class,$S,$S))",
+                builder.addStatement(Consts.GROUP_PARAM_NAME + ".put($S,$T.build($T.$L,$T.class,$S,$S))",
                         meta.getPath(),
                         ClassName.get(RouterMeta.class),
                         ClassName.get(RouterMeta.Type.class),

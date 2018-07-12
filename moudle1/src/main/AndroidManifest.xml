@@ -3,7 +3,6 @@
     package="demo.prim.com.moudle1">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
         <activity android:name=".Main2Activity" />
     </application>
 

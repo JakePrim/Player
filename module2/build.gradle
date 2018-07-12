@@ -61,14 +61,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation dependenciesConfig.appcompatv7
     implementation 'com.android.support.constraint:constraint-layout:+'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:+'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
+    implementation project(':base')
     annotationProcessor project(':primrouter-compiler')
-
-    implementation project(':primrouter-core')
 }

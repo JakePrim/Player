@@ -1,13 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#454545"
+    android:orientation="vertical"
     tools:context=".ModuleTest2Activity">
 
     <TextView
         android:id="@+id/module2_textView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/module2_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="跳转到module1" />
+
+    <Button
+        android:id="@+id/app_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="跳转到app" />
+
+    <Button
+        android:id="@+id/appToService1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="模块间业务通信-调用app业务方法"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/appToService2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="模块间业务通信-调用module1业务方法"
+        android:textColor="#ffffff" />
+</LinearLayout>

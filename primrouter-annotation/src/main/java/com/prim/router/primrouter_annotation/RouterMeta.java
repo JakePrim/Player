@@ -11,7 +11,7 @@ public class RouterMeta {
      * 路由的类型枚举
      */
     public enum Type {
-        ACTIVITY, INSTANCE
+        ACTIVITY, SERVICE
     }
 
     /**

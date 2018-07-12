@@ -1,20 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#454545"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我的地址是：/app/main" />
+        android:text="我的地址是：/app/main"
+        android:textColor="#ffffff" />
 
     <Button
         android:id="@+id/appToModule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="跳转module1" />
-</RelativeLayout>
+        android:layout_marginTop="10dp"
+        android:background="@color/colorAccent"
+        android:padding="10dp"
+        android:text="跳到module1"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/appToModule2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorAccent"
+        android:padding="10dp"
+        android:text="跳到module2"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/appToService1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary"
+        android:padding="10dp"
+        android:text="模块间业务通信-调用module1业务方法"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/appToService2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorPrimary"
+        android:padding="10dp"
+        android:text="模块间业务通信-调用module2业务方法"
+        android:textColor="#ffffff" />
+</LinearLayout>

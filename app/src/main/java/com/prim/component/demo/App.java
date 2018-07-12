@@ -2,7 +2,7 @@ package com.prim.component.demo;
 
 import android.app.Application;
 
-import com.primrouter_core.PrimRouter;
+import com.primrouter_core.core.PrimRouter;
 
 /**
  * @author prim
