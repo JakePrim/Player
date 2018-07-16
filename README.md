@@ -1,8 +1,10 @@
-# ComponentDemo
-组件化配置Demo 详细的配置
+# PrimRoute 路由
 
-[demo地址](https://github.com/JakePrim/ComponentDemo)
 
+
+## 组件化实现方案
+
+### 组件化配置
 1. 在项目根部新建 config.build
 
 ```
