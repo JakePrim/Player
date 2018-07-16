@@ -177,12 +177,17 @@ public class RouterProcessor extends AbstractProcessor {
         //获取Service的类型
         TypeElement service = elementUtils.getTypeElement(Consts.Service);
 
+        TypeElement fragment = elementUtils.getTypeElement(Consts.Fragment);
+
+        TypeElement v4Fragment = elementUtils.getTypeElement(Consts.V4Fragment);
+
         //单个的节点
         for (Element element : annotatedWith) {
             // 获取类信息 如Activity类
             TypeMirror typeMirror = element.asType();
             // 获取节点的注解信息
             Router annotation = element.getAnnotation(Router.class);
+            log.i(typeMirror + " | " + activity.asType());
             //只能指定的类上面使用
             if (typeUtils.isSubtype(typeMirror, activity.asType())) {
                 //存储路由相关的信息
@@ -190,6 +195,9 @@ public class RouterProcessor extends AbstractProcessor {
             } else if (typeUtils.isSubtype(typeMirror, service.asType())) {
                 //存储路由相关的信息
                 routerMeta = new RouterMeta(RouterMeta.Type.SERVICE, annotation, element);
+            } else if (typeUtils.isSubtype(typeMirror, fragment.asType()) || typeUtils.isSubtype(typeMirror, v4Fragment.asType())) {
+                //存储路由相关的信息
+                routerMeta = new RouterMeta(RouterMeta.Type.FRAGMENT, annotation, element);
             } else {
                 throw new RuntimeException("Just Support Activity Router!");
             }

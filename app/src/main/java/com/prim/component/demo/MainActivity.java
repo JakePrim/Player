@@ -1,5 +1,7 @@
 package com.prim.component.demo;
 
+import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,7 +15,7 @@ import com.primrouter_core.core.PrimRouter;
 @Router(path = "/app/main")
 public class MainActivity extends AppCompatActivity {
 
-    private Button appToModule, appToService1, appToService2, appToModule2;
+    private Button appToModule, appToService1, appToService2, appToModule2, appToFragment;
 
 
     @Override
@@ -24,6 +26,15 @@ public class MainActivity extends AppCompatActivity {
         appToService1 = findViewById(R.id.appToService1);
         appToService2 = findViewById(R.id.appToService2);
         appToModule2 = findViewById(R.id.appToModule2);
+        appToFragment = findViewById(R.id.appToFragment);
+
+        appToFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appToFragment();
+            }
+        });
+
         appToModule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +63,16 @@ public class MainActivity extends AppCompatActivity {
                 appToModule2();
             }
         });
+    }
+
+    private void appToFragment() {
+        Object navigation = PrimRouter.getInstance().jump("/module2/fragment").navigation(this);
+        if (navigation instanceof Fragment) {
+            Fragment fragment = (Fragment) navigation;
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.fragment, fragment);
+            fragmentTransaction.commit();
+        }
     }
 
     private void appToModule2() {

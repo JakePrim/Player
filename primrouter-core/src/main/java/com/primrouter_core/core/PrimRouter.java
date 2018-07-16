@@ -2,6 +2,7 @@ package com.primrouter_core.core;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -141,10 +142,8 @@ public class PrimRouter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.e(TAG, "navigation: " + jumpCard.getType());
         switch (jumpCard.getType()) {
             case ACTIVITY:
-                Log.e(TAG, "navigation: " + jumpCard.getDestination());
                 if (context == null) {
                     context = this.application;
                 }
@@ -164,7 +163,6 @@ public class PrimRouter {
                             ActivityCompat.startActivityForResult((Activity) finalContext, intent,
                                     requestCode, jumpCard.getOptionsBundle());
                         } else {
-                            Log.e(TAG, "run: " + jumpCard.getDestination());
                             ActivityCompat.startActivity(finalContext, intent, jumpCard
                                     .getOptionsBundle());
                         }
@@ -178,8 +176,20 @@ public class PrimRouter {
                 });
                 break;
             case SERVICE:
-                Log.e(TAG, "navigation: " + jumpCard.getService());
                 return jumpCard.getService();
+            case FRAGMENT:
+                Class<?> fragment = jumpCard.getDestination();
+                try {
+                    Object instance = fragment.getConstructor().newInstance();
+                    if (instance instanceof Fragment) {
+                        ((Fragment) instance).setArguments(jumpCard.getExtras());
+                    } else if (instance instanceof android.support.v4.app.Fragment) {
+                        ((android.support.v4.app.Fragment) instance).setArguments(jumpCard.getExtras());
+                    }
+                    return instance;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             default:
                 break;
         }
@@ -249,5 +259,14 @@ public class PrimRouter {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**
+     * 注入参数
+     *
+     * @param activity
+     */
+    public void inject(Activity activity) {
+        ExtraLoader.getInstance().loadExtra(activity);
     }
 }

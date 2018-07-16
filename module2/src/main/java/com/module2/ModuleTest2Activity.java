@@ -8,22 +8,27 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.base.TestService;
+import com.prim.router.primrouter_annotation.Extra;
 import com.prim.router.primrouter_annotation.Router;
 import com.primrouter_core.core.PrimRouter;
 
 @Router(path = "/module2/test")//注意不同的module 不能使用同一个 group 作为分组名 否则会生成相同的类导致报错
 public class ModuleTest2Activity extends AppCompatActivity {
 
+    @Extra(name = "path")
+    public String url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_module_test2);
+        PrimRouter.getInstance().inject(this);
         TextView module2_textView = findViewById(R.id.module2_textView);
         Button module2_button = findViewById(R.id.module2_button);
         Button app_button = findViewById(R.id.app_button);
-        Intent intent = getIntent();
-        final String path = intent.getStringExtra("path");
-        module2_textView.setText("我是module2，我的地址是：/module2/test. 我是被地址：" + path + " 调起的");
+//        Intent intent = getIntent();
+//        final String path = intent.getStringExtra("path");
+        module2_textView.setText("我是module2，我的地址是：/module2/test. 我是被地址：" + url + " 调起的");
         module2_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

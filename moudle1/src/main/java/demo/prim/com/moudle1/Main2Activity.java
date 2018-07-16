@@ -1,6 +1,7 @@
 package demo.prim.com.moudle1;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,21 +9,27 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.base.TestService;
+import com.prim.router.primrouter_annotation.Extra;
 import com.prim.router.primrouter_annotation.Router;
 import com.primrouter_core.core.PrimRouter;
 
 @Router(path = "/module1/test")
 public class Main2Activity extends AppCompatActivity {
 
+    @Extra
+    public String path;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        PrimRouter.getInstance().inject(this);
         Button button = findViewById(R.id.button);
         Button module1_button = findViewById(R.id.module1_button);
         TextView textview = findViewById(R.id.textview);
-        Intent intent = getIntent();
-        final String path = intent.getStringExtra("path");
+//        Intent intent = getIntent();
+//        final String path = intent.getStringExtra("path");
+
         textview.setText("我是module1 我的路由地址是：module1/test. 我是被地址：" + path + "调起来的");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
